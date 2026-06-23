@@ -1,0 +1,40 @@
+# ============================================================================
+# SO-ARM101 — Docker + Services for Raspberry Pi
+#
+# Services:
+#   1. rosbridge    — ROSBridge WebSocket (ws://0.0.0.0:9090)
+#   2. microros     — micro-ROS Agent (serial link to Teensy)
+#
+# The camera stream runs NATIVELY (not in Docker) because
+# Bookworm's Pi Camera Module requires libcamera/rpicam-vid
+# which is not available inside Docker containers.
+#
+# Usage:
+#   docker compose up -d        # start ROS services
+#   docker compose logs -f      # view logs
+#   docker compose down         # stop
+# ============================================================================
+
+services:
+  rosbridge:
+    image: ros:humble-ros-base
+    container_name: soarm101-rosbridge
+    network_mode: host
+    restart: unless-stopped
+    command: >
+      bash -c "
+        apt-get update -qq &&
+        apt-get install -y -qq ros-humble-rosbridge-server > /dev/null 2>&1 &&
+        source /opt/ros/humble/setup.bash &&
+        echo '🌐 ROSBridge starting on ws://0.0.0.0:9090 ...' &&
+        ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+      "
+
+  microros-agent:
+    image: microros/micro-ros-agent:humble
+    container_name: soarm101-microros
+    network_mode: host
+    restart: unless-stopped
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0"
+    command: serial --dev /dev/ttyACM0 -b 921600

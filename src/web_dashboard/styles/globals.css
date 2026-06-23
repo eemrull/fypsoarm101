@@ -1,0 +1,166 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ── Responsive panel font scaling via CSS Container Queries ───────────── */
+/* Panels that opt-in via .panel-scale-container will have their children    */
+/* scale text proportionally to the panel width.  Baseline: 320-450 px      */
+/* (comfortable on a 1440p 27" monitor).                                    */
+
+.panel-scale-container {
+  container-type: inline-size;
+}
+
+/*
+ * Stepped font-size using @container.
+ * At the default ~320-430 px panel width the font-size stays at 14px
+ * (identical to the current look on 1440p).
+ * Narrower panels get a smaller base, wider panels grow slightly.
+ *
+ * .panel-scale-content — explicit opt-in (e.g. CameraFeed inner div)
+ * .panel-scale-container > * — auto-applies to all direct children
+ */
+.panel-scale-content,
+.panel-scale-container > * {
+  font-size: 14px; /* fallback for non-supporting browsers */
+}
+
+@container (max-width: 259px) {
+  .panel-scale-content,
+  .panel-scale-container > * { font-size: 10px; }
+}
+@container (min-width: 260px) and (max-width: 319px) {
+  .panel-scale-content,
+  .panel-scale-container > * { font-size: 11px; }
+}
+@container (min-width: 320px) and (max-width: 399px) {
+  .panel-scale-content,
+  .panel-scale-container > * { font-size: 12.5px; }
+}
+@container (min-width: 400px) and (max-width: 549px) {
+  .panel-scale-content,
+  .panel-scale-container > * { font-size: 14px; }
+}
+@container (min-width: 550px) and (max-width: 749px) {
+  .panel-scale-content,
+  .panel-scale-container > * { font-size: 15px; }
+}
+@container (min-width: 750px) {
+  .panel-scale-content,
+  .panel-scale-container > * { font-size: 16px; }
+}
+
+/*
+ * Override Tailwind's rem-based text utilities to em-based within
+ * scaled panels so they inherit the container-scaled font-size.
+ */
+.panel-scale-content .text-\[10px\],
+.panel-scale-container .text-\[10px\] { font-size: 0.714em; line-height: 1.3; }
+.panel-scale-content .text-\[11px\],
+.panel-scale-container .text-\[11px\] { font-size: 0.786em; line-height: 1.35; }
+.panel-scale-content .text-xs,
+.panel-scale-container .text-xs   { font-size: 0.857em; line-height: 1.35; }
+.panel-scale-content .text-sm,
+.panel-scale-container .text-sm   { font-size: 1em;     line-height: 1.45; }
+.panel-scale-content .text-base,
+.panel-scale-container .text-base { font-size: 1.143em; line-height: 1.55; }
+.panel-scale-content .text-lg,
+.panel-scale-container .text-lg   { font-size: 1.286em; line-height: 1.6;  }
+
+/* ── Bottom toolbar responsive scaling ─────────────────────────────────── */
+/* Scale the toolbar buttons + tooltips proportionally to viewport width.   */
+.toolbar-scale {
+  font-size: clamp(0.65rem, 0.85vw, 1rem);
+}
+

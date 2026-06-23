@@ -1,0 +1,10 @@
+{
+  "names": {
+    "microcdr": {
+      "cmake-args": [
+        "-DUCDR_SUPERBUILD=OFF",
+        "-DUCDR_ISOLATED_INSTALL=OFF"
+      ]
+    }
+  }
+}

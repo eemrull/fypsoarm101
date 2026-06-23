@@ -1,0 +1,146 @@
+{
+  "version": 1,
+  "name": "Edgev2.5_pick-and-place-repeat",
+  "waypoints": [
+    {
+      "angles": [180.8, 180, 180, 180, 180, 220.5],
+      "durationMs": 1250,
+      "label": "1. Home (Jaw Open)"
+    },
+    {
+      "angles": [180.8, 180, 180, 180, 269.6, 220.5],
+      "durationMs": 1250,
+      "label": "2. Wrist Roll 90 (Side Grab)"
+    },
+    {
+      "angles": [180.8, 193, 179, 206, 269.6, 220.5],
+      "durationMs": 1500,
+      "label": "3. Angled Approach Above"
+    },
+    {
+      "angles": [180.8, 210.3, 177.8, 224.4, 270, 220.5],
+      "durationMs": 1500,
+      "label": "4. Lower to Cube (Slow)"
+    },
+    {
+      "angles": [180.8, 210.3, 177.8, 224.4, 270, 220.5],
+      "durationMs": 400,
+      "label": "4b. Settle Before Grab"
+    },
+    {
+      "angles": [180.8, 210.3, 177.8, 224.4, 270, 185.2],
+      "durationMs": 1500,
+      "label": "5. Grab Cube (Tighter Grip)"
+    },
+    {
+      "angles": [180.8, 210.3, 177.8, 224.4, 270, 185.2],
+      "durationMs": 500,
+      "label": "5b. Settle After Grab"
+    },
+    {
+      "angles": [180.8, 180, 180, 180, 269.6, 185.2],
+      "durationMs": 1500,
+      "label": "6. Lift Box Up (Slower)"
+    },
+    {
+      "angles": [276, 180, 180, 180, 269.6, 185.2],
+      "durationMs": 2000,
+      "label": "7. Rotate Base 90 (Slow to Prevent Fling)"
+    },
+    {
+      "angles": [275.6, 215, 173.5, 216.5, 278.9, 185.2],
+      "durationMs": 1500,
+      "label": "8. Lower to Place (Slow)"
+    },
+    {
+      "angles": [275.6, 215, 173.5, 216.5, 278.9, 185.2],
+      "durationMs": 400,
+      "label": "8b. Settle Before Release"
+    },
+    {
+      "angles": [275.6, 215, 173.5, 216.5, 278.9, 220.5],
+      "durationMs": 1250,
+      "label": "9. Release Box (Jaw Open)"
+    },
+    {
+      "angles": [275.6, 215, 173.5, 216.5, 278.9, 220.5],
+      "durationMs": 500,
+      "label": "9b. Settle After Release"
+    },
+    {
+      "angles": [275.6, 193, 179, 206, 269.6, 220.5],
+      "durationMs": 1250,
+      "label": "10. Retract From Box"
+    },
+    {
+      "angles": [276, 180, 180, 180, 269.6, 220.5],
+      "durationMs": 1250,
+      "label": "11. Lift Arm"
+    },
+    {
+      "angles": [275.6, 193, 179, 206, 269.6, 220.5],
+      "durationMs": 1500,
+      "label": "12. Angled Approach Again"
+    },
+    {
+      "angles": [275.6, 215, 173.5, 216.5, 278.9, 220.5],
+      "durationMs": 1500,
+      "label": "13. Slide Into Box Again"
+    },
+    {
+      "angles": [275.6, 215, 173.5, 216.5, 278.9, 220.5],
+      "durationMs": 400,
+      "label": "13b. Settle Before Grab"
+    },
+    {
+      "angles": [275.6, 215, 173.5, 216.5, 278.9, 185.2],
+      "durationMs": 1500,
+      "label": "14. Grab Box (Tighter Grip)"
+    },
+    {
+      "angles": [275.6, 215, 173.5, 216.5, 278.9, 185.2],
+      "durationMs": 500,
+      "label": "14b. Settle After Grab"
+    },
+    {
+      "angles": [276, 180, 180, 180, 269.6, 185.2],
+      "durationMs": 1500,
+      "label": "15. Lift Box Up (Slower)"
+    },
+    {
+      "angles": [180.8, 180, 180, 180, 269.6, 185.2],
+      "durationMs": 2000,
+      "label": "16. Rotate Base Back (Slow)"
+    },
+    {
+      "angles": [180.8, 210.3, 177.8, 224.4, 270, 185.2],
+      "durationMs": 1500,
+      "label": "17. Lower to Original (Slow)"
+    },
+    {
+      "angles": [180.8, 210.3, 177.8, 224.4, 270, 185.2],
+      "durationMs": 400,
+      "label": "17b. Settle Before Release"
+    },
+    {
+      "angles": [180.8, 210.3, 177.8, 224.4, 270, 220.5],
+      "durationMs": 1250,
+      "label": "18. Release Box (Jaw Open)"
+    },
+    {
+      "angles": [180.8, 210.3, 177.8, 224.4, 270, 220.5],
+      "durationMs": 500,
+      "label": "18b. Settle After Release"
+    },
+    {
+      "angles": [180.8, 193, 179, 206, 269.6, 220.5],
+      "durationMs": 1250,
+      "label": "19. Retract From Box"
+    },
+    {
+      "angles": [180.8, 180, 180, 180, 180, 220.5],
+      "durationMs": 1250,
+      "label": "20. Return Home"
+    }
+  ]
+}

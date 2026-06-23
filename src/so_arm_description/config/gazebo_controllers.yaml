@@ -1,0 +1,38 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    
+    # These must match the MoveIt config expectations
+    arm_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+
+    gripper_controller:
+      type: position_controllers/GripperActionController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+arm_controller:
+  ros__parameters:
+    joints:
+      - Rotation
+      - Pitch
+      - Elbow
+      - Wrist_Pitch
+      - Wrist_Roll
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    # PID Gains
+    gains:
+      Rotation:    {p: 100.0, i: 0.0, d: 10.0}
+      Pitch:       {p: 100.0, i: 0.0, d: 10.0}
+      Elbow:       {p: 100.0, i: 0.0, d: 10.0}
+      Wrist_Pitch: {p: 50.0, i: 0.0, d: 1.0}
+      Wrist_Roll:  {p: 50.0, i: 0.0, d: 1.0}
+
+gripper_controller:
+  ros__parameters:
+    joint: Jaw

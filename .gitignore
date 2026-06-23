@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+.next/
+out/
+.pio/
+venv/
+venv_docx/
+__pycache__/
+*.pyc
+
+# Build outputs and temporary files
+build/
+install/
+log/
+devel/
+dist/
+*.tsbuildinfo
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.vercel
+~$*
+*.tmp
+
+# IDE / System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Academic papers, PDFs, word documents, installers, data logs
+fyp/
+*.pdf
+*.docx
+*.msi
+*.csv
+fyp1_report.txt
+fyp2temp.md
+extract_pdf.py
+build_docx.py
+docs/fyp_validation_plan.md
+raw_audit_data.txt
+last_paragraphs.txt
+figure_layout.txt
+audit_docx_raw.py
+inspect_references.py
+find_figure_images.py
+
+# Local env files
+.env*

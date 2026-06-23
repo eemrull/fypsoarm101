@@ -1,0 +1,27 @@
+# ==============================================================================
+# SO-ARM101 — Pre-baked ROSBridge Image
+#
+# Builds a ros:humble image with ros-humble-rosbridge-server already installed
+# so startup is instant (~2 seconds) instead of running apt-get on every boot.
+#
+# Build once on the Pi:
+#   docker build -f Dockerfile.rosbridge -t soarm101-rosbridge:latest .
+#
+# Or let docker compose handle it automatically (it will build if needed):
+#   docker compose up -d
+# ==============================================================================
+
+FROM ros:humble-ros-base
+
+# Install rosbridge_server package once at image build time.
+# This avoids the 30-120 second apt-get install penalty on every container restart.
+RUN apt-get update -qq && \
+    apt-get install -y -qq --no-install-recommends \
+        ros-humble-rosbridge-server \
+    && rm -rf /var/lib/apt/lists/*
+
+# Source ROS 2 environment and launch rosbridge on container start
+CMD ["/bin/bash", "-c", \
+    "source /opt/ros/humble/setup.bash && \
+     echo '🌐 ROSBridge starting on ws://0.0.0.0:9090 ...' && \
+     ros2 launch rosbridge_server rosbridge_websocket_launch.xml"]

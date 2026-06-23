@@ -1,0 +1,87 @@
+# ==============================================================================
+# SO-ARM101 — Full Stack Docker Compose
+#
+# Runs all 3 services on the Raspberry Pi:
+#   1. dashboard     — Next.js Web Dashboard         (http://0.0.0.0:3000)
+#   2. rosbridge     — ROSBridge WebSocket Server     (ws://0.0.0.0:9090)
+#   3. microros      — micro-ROS Agent                (serial /dev/ttyACM0)
+#
+# Usage:
+#   docker compose up -d              # start all services
+#   docker compose up -d --build      # rebuild dashboard image first
+#   docker compose logs -f            # tail all logs
+#   docker compose logs -f dashboard  # tail dashboard logs only
+#   docker compose down               # stop everything
+#
+# First-time build on Pi 5:  ~10-20 minutes (npm ci + next build)
+# Subsequent starts:         ~5 seconds (cached image)
+# ==============================================================================
+
+services:
+  # ─── Web Dashboard (Next.js) ───────────────────────────────────────────────
+  dashboard:
+    build:
+      context: ./src/web_dashboard
+      dockerfile: Dockerfile
+      args:
+        # The dashboard runs on the same Pi as rosbridge,
+        # so the browser connects to the Pi's IP for rosbridge.
+        # "localhost" works because the browser resolves it to the Pi's address
+        # when you access http://<pi-ip>:3000.
+        #
+        # If the browser is NOT on the Pi's network, override this:
+        #   NEXT_PUBLIC_ROSBRIDGE_URL=ws://<pi-tailscale-ip>:9090
+        NEXT_PUBLIC_ROSBRIDGE_URL: "ws://localhost:9090"
+        # Camera stream URLs are baked in at build-time by Next.js.
+        # Run `docker compose up -d --build` after changing these.
+        # Use Tailscale IPs so remote browsers can reach the streams.
+        #   Cam 1 (USB webcam)      → port 8554
+        #   Cam 2 (Pi Camera Mod)   → port 8555
+        NEXT_PUBLIC_CAMERA_URL: "http://100.67.212.5:8554"
+        NEXT_PUBLIC_CAMERA_2_URL: "http://100.67.212.5:8555"
+    container_name: soarm101-dashboard
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  # ─── ROSBridge WebSocket Server ────────────────────────────────────────────
+  #
+  # Uses a pre-baked image (Dockerfile.rosbridge) so startup is ~2 seconds.
+  # Previously the container ran apt-get install on EVERY restart (30-120s),
+  # causing intermittent "Failed to connect to ROSBridge" errors.
+  #
+  # First-time build (or after Dockerfile.rosbridge changes):
+  #   docker compose build rosbridge
+  rosbridge:
+    build:
+      context: .
+      dockerfile: Dockerfile.rosbridge
+    image: soarm101-rosbridge:latest
+    container_name: soarm101-rosbridge
+    network_mode: host
+    restart: unless-stopped
+    healthcheck:
+      # nc -z checks if port 9090 is accepting TCP connections
+      test: ["CMD-SHELL", "nc -z localhost 9090 || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  # ─── micro-ROS Agent (Serial ↔ ROS 2) ─────────────────────────────────────
+  microros-agent:
+    image: microros/micro-ros-agent:humble
+    container_name: soarm101-microros
+    network_mode: host
+    restart: unless-stopped
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0"
+    command: serial --dev /dev/ttyACM0 -b 921600

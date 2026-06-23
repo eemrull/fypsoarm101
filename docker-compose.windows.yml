@@ -1,0 +1,65 @@
+# ==============================================================================
+# SO-ARM101 — Windows/WSL2 Docker Compose
+#
+# Runs all 3 services natively on Windows via Docker Desktop (WSL2):
+#   1. dashboard     — Next.js Web Dashboard         (http://localhost:3000)
+#   2. rosbridge     — ROSBridge WebSocket Server     (ws://localhost:9090)
+#   3. microros      — micro-ROS Agent                (serial /dev/ttyACM0)
+#
+# NOTE ON SERIAL DEVICES IN WINDOWS:
+# To pass the Teensy's USB serial to Docker, you must first attach it to WSL2 
+# using `usbipd` from PowerShell:
+#   1. usbipd list
+#   2. usbipd bind --busid <BUSID>
+#   3. usbipd attach --wsl --busid <BUSID>
+#
+# Usage:
+#   docker compose -f docker-compose.windows.yml up -d
+#   docker compose -f docker-compose.windows.yml down
+# ==============================================================================
+
+services:
+  # ─── Web Dashboard (Next.js) ───────────────────────────────────────────────
+  dashboard:
+    build:
+      context: ./src/web_dashboard
+      dockerfile: Dockerfile
+      args:
+        # On Windows, we just connect to the local Docker Desktop port
+        NEXT_PUBLIC_ROSBRIDGE_URL: "ws://localhost:9090"
+        NEXT_PUBLIC_CAMERA_URL: ""
+    container_name: soarm101-dashboard-win
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+
+  # ─── ROSBridge WebSocket Server ────────────────────────────────────────────
+  rosbridge:
+    image: ros:humble-ros-base
+    container_name: soarm101-rosbridge-win
+    # Unlike Linux 'network_mode: host', Windows Docker Desktop requires explicit port mapping
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+    command: >
+      bash -c "
+        apt-get update -qq &&
+        apt-get install -y -qq ros-humble-rosbridge-server > /dev/null 2>&1 &&
+        source /opt/ros/humble/setup.bash &&
+        echo '🌐 ROSBridge starting on ws://localhost:9090 ...' &&
+        ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+      "
+
+  # ─── micro-ROS Agent (Serial ↔ ROS 2) ─────────────────────────────────────
+  microros-agent:
+    image: microros/micro-ros-agent:humble
+    container_name: soarm101-microros-win
+    # Bridge network mode (default) so it can talk to rosbridge internally
+    restart: unless-stopped
+    privileged: true
+    devices:
+      # This requires the Teensy to be attached to WSL2 via usbipd!
+      - "/dev/ttyACM0:/dev/ttyACM0"
+    command: serial --dev /dev/ttyACM0 -b 921600
